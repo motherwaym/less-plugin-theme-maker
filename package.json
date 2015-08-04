@@ -1,0 +1,21 @@
+{
+  "name": "less-plugin-theme-creator",
+  "version": "1.0.0",
+  "description": "create theme.css from regular less files by simple ruleset",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=0.4.2"
+  },
+  "devDependencies": {
+    "diff": "^1.4.0",
+    "less": "^2.5.1"
+  },
+  "dependencies": {
+    "clean-css": "^3.3.7"
+  }
+}
