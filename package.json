@@ -1,6 +1,6 @@
 {
   "name": "less-plugin-theme-creator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "create theme.css from regular less files by simple ruleset",
   "main": "lib/index.js",
   "scripts": {
@@ -17,5 +17,23 @@
   },
   "dependencies": {
     "clean-css": "^3.3.7"
-  }
+  },
+  "keywords": [
+    "theme",
+	"creator",
+    "theme creator",
+    "less",
+    "plugin",
+    "less plugin",
+    "less.js",
+    "lesscss",
+    "mixins",
+    "nested css",
+    "parser",
+    "preprocessor",
+    "style",
+    "styles",
+    "stylesheet",
+    "css less"
+  ]
 }
