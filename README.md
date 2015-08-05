@@ -10,7 +10,7 @@ Creates a theme file like Bootstrap's "bootstrap-theme.css" from existing full l
 Install..
 
 ```
-npm install -g npm i less-plugin-theme-creator
+npm install -g less-plugin-theme-creator
 ```
 
 ## Programmatic usage (Grunt example)
