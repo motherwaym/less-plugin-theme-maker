@@ -1,7 +1,8 @@
 less-plugin-theme-maker
 =======================
 
-Creates a theme file like Bootstrap's "bootstrap-theme.css" from existing full less project files.
+Creates a theme file like Bootstrap's "bootstrap-theme.css" from existing full less project files. It deletes any rules
+that don't make use of one or more LESS variables that are specified in the plugin configuration.
 
 Based on https://github.com/hoogi/less-plugin-theme-creator
 
@@ -15,16 +16,40 @@ Install..
 npm install --save-dev zephyrweb/less-plugin-theme-maker
 ```
 
-## Gulp usage
+## Basic usage
+
+```js
+var less = require('less');
+var LessThemeMaker = require('less-plugin-theme-maker');
+
+less.render(lessStr, {
+    plugins: [
+      new LessThemeMaker({
+        themedVariables: ['@some_var']
+      }
+    )]
+  })
+  .then(output => {
+    console.log(output);
+  }, error => {
+    console.log(error);
+  });
+
+
+```
+
+## Advanced/Gulp usage
 
 Given less/main.less and some themes defined in themes.json:
 
 ```css
+@bootstraplib: "../node_modules/bootstrap/less";
+
 @import "@{bootstraplib}/variables.less";
 @import "@{bootstraplib}/mixins.less";
 
 // custom theme overrides:
-@import "themes/@{theme}.incl.less";
+@import "themes/@{theme}.less";
 
 // Core CSS
 @import "@{bootstraplib}/scaffolding.less";
@@ -48,7 +73,7 @@ var LessThemeMaker = require('less-plugin-theme-maker');
 gulp.task('less-themes', function (done) {
 
   var tasks = require('./themes.json')
-		.map(theme => theme.id)
+    .map(theme => theme.id)
     .map(t => {
       return gulp.src(['less/styles.less'])
         .pipe(less({
@@ -57,13 +82,13 @@ gulp.task('less-themes', function (done) {
           },
           plugins: [
             new LessThemeMaker({
-              themedVariables: getLessVars(t),
-							excludeMixinName: ".theme-overrides"
+              themedVariables: getLessVars(t), // only preserve rules that this particular theme affects
+              excludeMixinName: ".theme-overrides"
             })
           ]
         }))
-        .pipe(rename(`platform-${t}.css`))
-        .pipe(gulp.dest('./tmp'))
+        .pipe(rename(`theme-${t}.css`))
+        .pipe(gulp.dest('./css'))
     });
 
   return merge(tasks);
@@ -73,7 +98,7 @@ gulp.task('less-themes', function (done) {
 
 function getLessVars(theme) {
 
-  var contentsStr = fs.readFileSync(`./less/themes/${theme}.incl.less`, 'utf8').toString('utf8');
+  var contentsStr = fs.readFileSync(`./less/themes/${theme}.less`, 'utf8').toString('utf8');
     // replace all comments with empty string
     contentsStr = contentsStr.replace(/(\/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+\/)|(\/\/.*)/g, '');
 
@@ -84,6 +109,16 @@ function getLessVars(theme) {
 
 }
 ```
+
+Options:
+
+__themedVariables__
+
+Array of variable names that are used to preserve CSS rules that reference them directly or indirectly.
+
+__excludeMixinName__
+
+Name of a mixin that will have its contents preserved. Useful for CSS overrides that don't make use of any variables.
 
 ## Browser usage
 
