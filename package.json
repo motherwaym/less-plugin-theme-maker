@@ -1,12 +1,12 @@
 {
-  "name": "less-plugin-theme-creator",
-  "version": "1.0.1",
+  "name": "less-plugin-theme-maker",
+  "version": "1.0.0",
   "description": "create theme.css from regular less files by simple ruleset",
   "main": "lib/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test/index.js"
   },
-  "author": "",
+  "author": "Matt Motherway",
   "license": "ISC",
   "engines": {
     "node": ">=0.4.2"

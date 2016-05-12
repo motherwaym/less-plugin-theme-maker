@@ -9,8 +9,10 @@ console.log("\n" + stylize("LESS - theme creator", 'underline') + "\n");
 lessTester.runTestSet(
     {
 		relativeUrls: true,
-		silent: true,
-		plugins: [new plugin()]
+		silent: false,
+		plugins: [new plugin({
+			themedVariables: ['@brand-primary']
+		})]
 	},
     "/"
 );

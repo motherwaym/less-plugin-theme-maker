@@ -1,46 +1,88 @@
-[![NPM version](https://badge.fury.io/js/less-plugin-theme-creator.svg)](http://badge.fury.io/js/less-plugin-theme-creator) [![Dependencies](https://david-dm.org/hoogi/less-plugin-theme-creator.svg)](https://david-dm.org/hoogi/less-plugin-theme-creator) [![devDependency Status](https://david-dm.org/hoogi/less-plugin-theme-creator/dev-status.svg)](https://david-dm.org/hoogi/less-plugin-theme-creator#info=devDependencies) [![optionalDependency Status](https://david-dm.org/hoogi/less-plugin-theme-creator/optional-status.svg)](https://david-dm.org/hoogi/less-plugin-theme-creator#info=optionalDependencies)
-
-less-plugin-theme-creator
-========================
+less-plugin-theme-maker
+=======================
 
 Creates a theme file like Bootstrap's "bootstrap-theme.css" from existing full less project files.
 
-## lessc usage
+Based on https://github.com/hoogi/less-plugin-theme-creator
+
+This version allows themed variables to be defined in LESS files where they can use functions and reference other variables.
+
+## usage
 
 Install..
 
 ```
-npm install -g less-plugin-theme-creator
+npm install --save-dev zephyrweb/less-plugin-theme-maker
 ```
 
-## Programmatic usage (Grunt example)
+## Gulp usage
+
+Given less/main.less and some themes defined in themes.json:
+
+```css
+@import "@{bootstraplib}/variables.less";
+@import "@{bootstraplib}/mixins.less";
+
+// custom theme overrides:
+@import "themes/@{theme}.incl.less";
+
+// Core CSS
+@import "@{bootstraplib}/scaffolding.less";
+@import "@{bootstraplib}/type.less";
+@import "@{bootstraplib}/code.less";
+@import "@{bootstraplib}/grid.less";
+@import "@{bootstraplib}/tables.less";
+@import "@{bootstraplib}/forms.less";
+@import "@{bootstraplib}/buttons.less";
+
+// Components
+@import "@{bootstraplib}/component-animations.less";
+...
+```
 
 ```js
-module.exports = function(grunt) {
- grunt.initConfig({
-	 less: {
-		development: {
-			options: {
-				paths: ['less'],
-				plugins : [
-					new (require('less-plugin-theme-creator'))({
-						replacements: {
-							'@brand-primary': 'FF00F2'
-						}
-					})
-				]
-			},
-			files: {
-				 "dist/theme.css": "less/bootstrap.less",
-			}
-		}
-	 }
- });
- 
+var gulp = require('gulp');
+var less = require('gulp-less');
+var LessThemeMaker = require('less-plugin-theme-maker');
 
- grunt.loadNpmTasks('grunt-contrib-less');
- grunt.registerTask('default', ['less']);
-};
+gulp.task('less-themes', function (done) {
+
+  var tasks = require('./themes.json')
+		.map(theme => theme.id)
+    .map(t => {
+      return gulp.src(['less/styles.less'])
+        .pipe(less({
+          modifyVars: {
+            theme: t
+          },
+          plugins: [
+            new LessThemeMaker({
+              themedVariables: getLessVars(t),
+							excludeMixinName: ".theme-overrides"
+            })
+          ]
+        }))
+        .pipe(rename(`platform-${t}.css`))
+        .pipe(gulp.dest('./tmp'))
+    });
+
+  return merge(tasks);
+
+});
+
+
+function getLessVars(theme) {
+
+  var contentsStr = fs.readFileSync(`./less/themes/${theme}.incl.less`, 'utf8').toString('utf8');
+    // replace all comments with empty string
+    contentsStr = contentsStr.replace(/(\/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+\/)|(\/\/.*)/g, '');
+
+    var variableRegex = /(@[A-Za-z0-9\-_]+)(?=:)/g;
+    return contentsStr.match(variableRegex).map(function (obj) {
+      return obj;
+    });
+
+}
 ```
 
 ## Browser usage
