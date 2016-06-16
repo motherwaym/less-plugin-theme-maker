@@ -1,0 +1,25 @@
+@import "../bootstrap/bootstrap";
+
+@import (inline) "../../test.css";
+
+@brand-primary: #fff;
+
+.myClass {
+  .otherClass;
+}
+.theme-overrides();
+
+.otherClass {
+  color: @brand-primary;
+  width: 100%;
+}
+
+.theme-overrides() {
+  .test {
+    color: red;
+  }
+}
+
+.otherClass, .myClass {
+  border: 1px solid;
+}

@@ -34,8 +34,6 @@ less.render(lessStr, {
   }, error => {
     console.log(error);
   });
-
-
 ```
 
 ## Advanced/Gulp usage
@@ -118,7 +116,7 @@ Array of variable names that are used to preserve CSS rules that reference them 
 
 __excludeMixinName__
 
-Name of a mixin that will have its contents preserved. Useful for CSS overrides that don't make use of any variables.
+Name of a mixin that will have its contents preserved. Useful for CSS overrides that don't make use of any themed variables.
 
 ## Browser usage
 

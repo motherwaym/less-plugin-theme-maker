@@ -11,8 +11,20 @@ lessTester.runTestSet(
 		relativeUrls: true,
 		silent: false,
 		plugins: [new plugin({
-			themedVariables: ['@brand-primary']
+			themedVariables: ['@brand-primary'],
+			excludeMixinName: '.theme-overrides'
 		})]
 	},
-    "/"
+    "excludeMixin/"
+);
+
+lessTester.runTestSet(
+	{
+		relativeUrls: true,
+		silent: false,
+		plugins: [new plugin({
+			themedVariables: ['@brand-primary', '@brand-primary2']
+		})]
+	},
+	"default/"
 );
